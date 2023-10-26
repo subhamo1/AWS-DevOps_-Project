@@ -14,6 +14,23 @@ Facial Recognition App on AWS
 
 Step 1: CREATE 2 S3 Bucket
 
+{
+  "name": "node-app",
+  "version": "1.0.0",
+  "lockfileVersion": 2,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "node-app",
+      "version": "1.0.0",
+      "license": "ISC",
+      "dependencies": {
+        "express": "^4.17.2",
+        "nodemon": "^2.0.15"
+      }
+    },
+    "no 
+
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/a99db2e4-839b-4ccd-a11e-1dc10a3e73be)
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/5f2a709b-f6c9-4d5f-b63a-7f77d4bf5b50)
