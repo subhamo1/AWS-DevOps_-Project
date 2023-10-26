@@ -124,7 +124,22 @@ For create API Gateway first create IAM Role For API Gateway
  And Deploy the API
 Step 10 : click ADD ARNs  and go to s3bucket  and copy the bucket name
 
-
+{
+  "name": "node-app",
+  "version": "1.0.0",
+  "lockfileVersion": 2,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "node-app",
+      "version": "1.0.0",
+      "license": "ISC",
+      "dependencies": {
+        "express": "^4.17.2",
+        "nodemon": "^2.0.15"
+      }
+    },
+    
 Step 11 :
 
 Creat the  React Frontent
