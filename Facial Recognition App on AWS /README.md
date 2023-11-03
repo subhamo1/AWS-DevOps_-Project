@@ -4,7 +4,8 @@ Facial Recognition App on AWS
 
 
 
-![aws-face-up](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/f990fd99-b3c7-46eb-893b-5e6e2d474479)
+![AWS-Architecture-Icons-Deck_For-Light-BG_04282023](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/a598dbb5-7a34-488d-8319-8c021023fd2a)
+
 
 
 
