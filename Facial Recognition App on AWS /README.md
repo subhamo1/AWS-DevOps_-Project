@@ -11,22 +11,7 @@ Facial Recognition App on AWS
 
 Step 1: CREATE 2 S3 Bucket
 
-{
-  "name": "node-app",
-  "version": "1.0.0",
-  "lockfileVersion": 2,
-  "requires": true,
-  "packages": {
-    "": {
-      "name": "node-app",
-      "version": "1.0.0",
-      "license": "ISC",
-      "dependencies": {
-        "express": "^4.17.2",
-        "nodemon": "^2.0.15"
-      }
-    },
-    "no 
+
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/a99db2e4-839b-4ccd-a11e-1dc10a3e73be)
 
@@ -62,12 +47,57 @@ Step 4 : Edit Configuration and change the basic seting
 
 Step 5 :  click the  Add trigger  point and select S3 bucket  and deploy the below code in lambda function
 
-![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/022c893a-eefe-4520-8f86-3db0068f6609)
+import boto3
+s3 =boto3.client('s3')
+rekognition = boto3.client('rekognition',region_name='us-east-1')
+dynamoTableName = 'employee'
+dynamodb =boto3.resource('dynamodb',region_name='us-east-1')
+employeeTable =dynamodb.Table(dynamoTableName)
 
-![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/b5b5cc1d-f0bf-4b0d-a92d-a2f157f903e2)
+def lambda_handler(event,context):
+    print(event)
+    bucket = event['Records'] [0] ['S3'] ['bucket'] ['name']
+    key = event['Records'] [0] ['S3'] ['object'] ['key']
+    try:
+        response = index_emp_images(bucket,key)
+        print(response)
+        if response['ResponseMetadata'] ['HTTPStatusCode'] == 200:
+            faceId = response['FaceRecords'] [0] ['Face'] ['FaceId']
+            name =key.split('.') [0].split('-')
+            firstName =name[0]
+            lastname=name[1]
+            register_employee(faceId,firstName,lastname)
+            return response
+    except Exception as e:
+        print(e)
+        print("error processing employee image {} from bucket {}.".format(key,bucket))
+        raise e
+    def index_emp_images(bucket,key):
+        response = rekognition.index_faces(
+            Image={
+                'S3Object':
+                {
+                    'Bucket': bucket,
+                    'Name':key
+                }
+            },
+            CollectionId='employees'
+        )
+        return response
+
+def register_employee(faceid,firstName,lastname):
+    employeeTable.put_item(
+        Item={
+            'rekognitionId': faceid,
+            'firstName':firstName,
+            'lastName':lastname
+
+        }
+    )
 
 
-![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/3d0ecb8c-5807-4934-b9d4-3b86a8d247ca)
+
+
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/26b19c73-79f4-43ac-8721-7053a613f538)
 
@@ -99,14 +129,63 @@ Step 7: upload your images in s3 bucket After this you chek all your S3 Object i
 
 
 Step 8:
-Fro Authentication create  another function on lambda Depoly the below code
+For Authentication create  another function on lambda Depoly the below code
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/b23f3d51-9d15-407a-95a1-25aa132538a4)
 
-![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/de3e6409-3cba-4e48-91b7-be47a4c86e26)
+import boto3
+import json
 
-![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/1b540728-b77f-4f30-ac85-e3370c734e60)
+s3 =boto3.client('s3')
+rekognition = boto3.client('rekognition',region_name='us-east-1')
+dynamoTableName = 'employee'
+dynamodb =boto3.resource('dynamodb',region_name='us-east-1')
+employeeTable =dynamodb.Table(dynamoTableName)
+bucketName='visitorimagess'
 
+def lambda_handler(event,context):
+    print(event)
+    objectKey =event['queryStringParameters']['objectKey']
+    image_bytes =s3.get_object(Bucket=bucketName,key=objectKey)['Body'].read()
+    response=rekognition.search_faces_by_image(
+        CollectionId='employees',
+        Image={'Bytes':image_bytes}
+    )
+
+    for match in response['FaceMatches']:
+        print(match['Face']['FaceId'],match['Face']['Confidence'])
+
+        face =employeeTable.get_item(
+            Key={
+                'rekognitionId': match['Face'] ['FaceId']
+                
+            }
+
+        )
+        if 'Item' in face:
+            print('person Found: ',face['Item'])
+            return buildResponse(200,{
+                'Message': 'Success',
+                'firstName': face['Item'] ['FirstName'],
+                'lastName': face['Item'] ['LastName']
+
+            })
+        
+        print('person could not be recognized')
+        return buildResponse(403,{'Messege':'person Not Found'})
+    def buildResponse(statusCode,body=None):
+        response={
+            'statusCode':statusCode,
+            'headers':{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin':'*'
+            }
+        }
+
+        if body is not None:
+            response['body'] = json.dumps(body)
+            return response
+            
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/274c8bcc-ca68-4e04-8fad-297d04e29b8f)
 
 Step 9: Create API Gateway
