@@ -86,7 +86,7 @@ Step 6 : Go to DynamoDb and create table
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/d426072d-2464-417c-94d7-60f9c26921d9)
 
-![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/7fc88d7f-077c-4e1d-875f-f2380edaf404)
+
 
 Step 6: create Rekognition thorugh aws cli and connnect through the Access key & Screct Access key , For install aws cli you can chek  the aws doc 
 
@@ -123,9 +123,7 @@ For Authentication create  another function on lambda Depoly the below code
 
 
 
-            
-![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/274c8bcc-ca68-4e04-8fad-297d04e29b8f)
-
+           
 
 Step 9: Create API Gateway
 For create API Gateway first create IAM Role For API Gateway
@@ -195,7 +193,5 @@ Creat the  React Frontent
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/b08a4158-97a7-4416-bd7f-f50569f99ef3)
 
-![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/4db060aa-d741-4399-9b93-a6d876280569)
 
-![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/2a4f633e-2be4-45b7-810b-20ef073a5bc3)
 
