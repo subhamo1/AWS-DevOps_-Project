@@ -66,55 +66,14 @@ Step 4 : Edit Configuration and change the basic seting
 Step 5 :  click the  Add trigger  point and select S3 bucket  and deploy the below code in lambda function
 
 
-import boto3
-s3 =boto3.client('s3')
-rekognition = boto3.client('rekognition',region_name='us-east-1')
-dynamoTableName = 'employee'
-dynamodb =boto3.resource('dynamodb',region_name='us-east-1')
-employeeTable =dynamodb.Table(dynamoTableName)
-
-def lambda_handler(event,context):
-    print(event)
-    bucket = event['Records'] [0] ['S3'] ['bucket'] ['name']
-    key = event['Records'] [0] ['S3'] ['object'] ['key']
-    try:
-        response = index_emp_images(bucket,key)
-        print(response)
-        if response['ResponseMetadata'] ['HTTPStatusCode'] == 200:
-            faceId = response['FaceRecords'] [0] ['Face'] ['FaceId']
-            name =key.split('.') [0].split('-')
-            firstName =name[0]
-            lastname=name[1]
-            register_employee(faceId,firstName,lastname)
-            return response
-    except Exception as e:
-        print(e)
-        print("error processing employee image {} from bucket {}.".format(key,bucket))
-        raise e
-    def index_emp_images(bucket,key):
-        response = rekognition.index_faces(
-            Image={
-                'S3Object':
-                {
-                    'Bucket': bucket,
-                    'Name':key
-                }
-            },
-            CollectionId='employees'
-        )
-        return response
-
-def register_employee(faceid,firstName,lastname):
-    employeeTable.put_item(
-        Item={
-            'rekognitionId': faceid,
-            'firstName':firstName,
-            'lastName':lastname
-
-        }
-    )
+![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/4da46970-590c-405f-809a-36f7527a587d)
 
 
+
+![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/e7d31ea0-282a-4671-8879-c982025bf342)
+
+
+![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/2bc27dc9-b508-46bd-8727-0c1cb393c511)
 
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/26b19c73-79f4-43ac-8721-7053a613f538)
@@ -153,58 +112,15 @@ For Authentication create  another function on lambda Depoly the below code
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/b23f3d51-9d15-407a-95a1-25aa132538a4)
 
 
-import boto3
-import json
 
-s3 =boto3.client('s3')
-rekognition = boto3.client('rekognition',region_name='us-east-1')
-dynamoTableName = 'employee'
-dynamodb =boto3.resource('dynamodb',region_name='us-east-1')
-employeeTable =dynamodb.Table(dynamoTableName)
-bucketName='visitorimagess'
+![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/2242ac0c-b32b-4517-a9b1-29fc52c6af4d)
 
-def lambda_handler(event,context):
-    print(event)
-    objectKey =event['queryStringParameters']['objectKey']
-    image_bytes =s3.get_object(Bucket=bucketName,key=objectKey)['Body'].read()
-    response=rekognition.search_faces_by_image(
-        CollectionId='employees',
-        Image={'Bytes':image_bytes}
-    )
 
-    for match in response['FaceMatches']:
-        print(match['Face']['FaceId'],match['Face']['Confidence'])
+![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/3d376b03-7edf-4b53-8339-fc4341ce8f07)
 
-        face =employeeTable.get_item(
-            Key={
-                'rekognitionId': match['Face'] ['FaceId']
 
-            }
+![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/57a464e2-48ad-4dcf-b4a9-4684cc8a9dff)
 
-        )
-        if 'Item' in face:
-            print('person Found: ',face['Item'])
-            return buildResponse(200,{
-                'Message': 'Success',
-                'firstName': face['Item'] ['FirstName'],
-                'lastName': face['Item'] ['LastName']
-
-            })
-
-        print('person could not be recognized')
-        return buildResponse(403,{'Messege':'person Not Found'})
-    def buildResponse(statusCode,body=None):
-        response={
-            'statusCode':statusCode,
-            'headers':{
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin':'*'
-            }
-        }
-
-        if body is not None:
-            response['body'] = json.dumps(body)
-            return response
 
 
             
@@ -273,4 +189,13 @@ Creat the  React Frontent
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/58a0ec42-b4fe-4bbc-905d-b9e7d19c17ca)
 
+
+![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/be9c4b33-38d2-44b4-8806-0e645f9e9751)
+
+
+![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/b08a4158-97a7-4416-bd7f-f50569f99ef3)
+
+![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/4db060aa-d741-4399-9b93-a6d876280569)
+
+![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/2a4f633e-2be4-45b7-810b-20ef073a5bc3)
 
