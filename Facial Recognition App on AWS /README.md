@@ -1,7 +1,5 @@
 
 
-Facial Recognition App on AWS
-
 
 
 ![AWS-Architecture-Icons-Deck_For-Light-BG_04282023](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/a598dbb5-7a34-488d-8319-8c021023fd2a)
@@ -15,9 +13,12 @@ Step 1: CREATE 2 S3 Bucket
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/a99db2e4-839b-4ccd-a11e-1dc10a3e73be)
 
+
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/5f2a709b-f6c9-4d5f-b63a-7f77d4bf5b50)
 
+
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/cc27952b-713b-4a58-bc37-327e636ff9ce)
+
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/9838b4cb-367d-46e7-8421-38102c70df51)
 
@@ -25,7 +26,9 @@ Step 2 :  Create IAM role for AWS lambda, s3, Dynamodb & cloudwatchlog
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/eecd6d3b-f76b-4cb6-807c-d4be9b9ebb54)
 
+
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/19dafe40-b733-4feb-97a5-a8d634f70658)
+
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/5f94896c-a3e1-48df-9328-1bb8013cd354)
 
@@ -33,6 +36,7 @@ Step 2 :  Create IAM role for AWS lambda, s3, Dynamodb & cloudwatchlog
 Step 3 : Create LAMBDA function for employee Registration
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/3898980d-75e4-4f85-a21f-a5e34e193b07)
+
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/1cf2868e-dbe1-4d81-ad8b-e9c5ff47e56f)
 
@@ -43,9 +47,13 @@ Step 4 : Edit Configuration and change the basic seting
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/de50d25b-7885-400f-b5e8-d0e674672e86)
 
+
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/84e23695-362b-45ee-88b4-2c9168c29961)
 
+
 Step 5 :  click the  Add trigger  point and select S3 bucket  and deploy the below code in lambda function
+
+
 
 import boto3
 s3 =boto3.client('s3')
@@ -101,6 +109,7 @@ def register_employee(faceid,firstName,lastname):
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/26b19c73-79f4-43ac-8721-7053a613f538)
 
+
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/0d091b29-690e-4099-941b-2d1390669539)
 
 
@@ -132,6 +141,7 @@ Step 8:
 For Authentication create  another function on lambda Depoly the below code
 
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/b23f3d51-9d15-407a-95a1-25aa132538a4)
+
 
 import boto3
 import json
@@ -185,6 +195,7 @@ def lambda_handler(event,context):
         if body is not None:
             response['body'] = json.dumps(body)
             return response
+
             
 ![image](https://github.com/subhamo1/AWS-DevOps_-Project/assets/101514854/274c8bcc-ca68-4e04-8fad-297d04e29b8f)
 
